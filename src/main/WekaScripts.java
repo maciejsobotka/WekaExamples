@@ -1,6 +1,6 @@
 package main;
 
-import scripts.SelectAttrScript;
+import scripts.GainRatioEvalScript;
 
 /** 
 * @author Maciej Sobótka
@@ -19,9 +19,9 @@ public class WekaScripts {
 			e.printStackTrace();
 		}*/
 		// lab2
-		SelectAttrScript sas = new SelectAttrScript();
+		GainRatioEvalScript sas = new GainRatioEvalScript();
 		try {
-			sas.GainRatioAttributeEval("195420L3_1a.arff");
+			sas.GainRatioAttributeEval("195420L3_1a.arff", 0.001);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

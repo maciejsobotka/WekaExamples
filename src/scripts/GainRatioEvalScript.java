@@ -1,30 +1,42 @@
 package scripts;
 
+import java.util.Arrays;
+
+import data.GainRatioAttr;
 import utils.LoadInstances;
 import weka.core.Instances;
 
-public class SelectAttrScript {
+public class GainRatioEvalScript {
 	private Instances data;
 	private int numInstances;
 	
-	public int GainRatioAttributeEval(String fileName) throws Exception{
+	public void GainRatioAttributeEval(String fileName, double threshold) throws Exception{
 
 		LoadInstances loader = new LoadInstances();
 		data = loader.Load(fileName);
 		numInstances = data.numInstances();
 		int classIndex = data.classIndex();
 		
-		double[] rank = new double[data.numAttributes()-1];
+		GainRatioAttr[] rank = new GainRatioAttr[data.numAttributes()-1];
 		int n=0;
 		for(int i=0; i<rank.length; ++i)
 			if (i != classIndex){
-				rank[n] = getGainRatio(i,classIndex);
+				rank[n] = new GainRatioAttr(getGainRatio(i,classIndex),i+1,data.attribute(i).name());
+				n++;
+			}
+		Arrays.sort(rank);
+		System.out.println("\tGain Ratio feature evaluator\n\nRanked attributes:");
+		n=0;
+		for(GainRatioAttr i : rank)
+			if (i.getGainRatioVal() > threshold){
+				System.out.println(i);
 				n++;
 			}
 		
-		for(int i=0; i<rank.length; ++i)
-			System.out.println(rank[i]);
-		return 0;
+		System.out.print("\nSelected attributes: ");
+		for(int i = 0; i < n; ++i)
+			if (i != n - 1) System.out.print(rank[i].getAttrNumber() + ",");
+			else System.out.print(rank[i].getAttrNumber() + " : " + n);
 	}
 	
 	private double getGainRatio(int attrIndex, int classIndex){
